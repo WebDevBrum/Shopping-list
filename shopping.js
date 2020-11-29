@@ -8,6 +8,9 @@ function handleSubmit(e) {
   e.preventDefault();
   console.log('submitted!!');
   const name = e.currentTarget.item.value;
+  // if its emepty then dont submit it
+  if (!name) return; // alternative would be to add required to html
+
  const item = {
    name,
    id: Date.now(),
@@ -19,14 +22,20 @@ function handleSubmit(e) {
  // clear the form
 //  e.currentTarget.item.value = '';
  e.target.reset(); // note use of target instaed of current target
- displayItems();
+ // displayItems(); instead of this we are now going to fire off a custom event that will tell anyone who cares that the items have been updated.
+ list.dispatchEvent(new CustomEvent('ItemsUpdated'));
 }
 
 function displayItems() {
-  const html = items.map(item => { 
-    return `<li>${item.name}</li>`
-  })
-  console.log(html);
+  const html = items
+    .map(item => `<li class="shopping-item">
+    <input type="checkbox">
+    <span class="itemName">${item.name}</span>
+    <button aria-label="Remove">&times</button>
+  </li>`)
+    .join('');
+  list.innerHTML = html;
 }
 
 shoppingForm.addEventListener('submit', handleSubmit);
+list.addEventListener('ItemsUpdated', displayItems);

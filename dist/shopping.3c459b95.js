@@ -126,7 +126,10 @@ const items = [];
 function handleSubmit(e) {
   e.preventDefault();
   console.log('submitted!!');
-  const name = e.currentTarget.item.value;
+  const name = e.currentTarget.item.value; // if its emepty then dont submit it
+
+  if (!name) return; // alternative would be to add required to html
+
   const item = {
     name,
     id: Date.now(),
@@ -138,18 +141,22 @@ function handleSubmit(e) {
   //  e.currentTarget.item.value = '';
 
   e.target.reset(); // note use of target instaed of current target
+  // displayItems(); instead of this we are now going to fire off a custom event that will tell anyone who cares that the items have been updated.
 
-  displayItems();
+  list.dispatchEvent(new CustomEvent('ItemsUpdated'));
 }
 
 function displayItems() {
-  const html = items.map(item => {
-    return `<li>${item.name}</li>`;
-  });
-  console.log(html);
+  const html = items.map(item => `<li class="shopping-item">
+    <input type="checkbox">
+    <span class="itemName">${item.name}</span>
+    <button aria-label="Remove">&times</button>
+  </li>`).join('');
+  list.innerHTML = html;
 }
 
 shoppingForm.addEventListener('submit', handleSubmit);
+list.addEventListener('ItemsUpdated', displayItems);
 },{}],"../../../.npm-global/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -178,7 +185,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64764" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60768" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
