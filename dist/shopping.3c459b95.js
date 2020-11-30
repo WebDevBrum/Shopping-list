@@ -126,7 +126,7 @@ const items = [];
 function handleSubmit(e) {
   e.preventDefault();
   console.log('submitted!!');
-  const name = e.currentTarget.item.value; // if its emepty then dont submit it
+  const name = e.currentTarget.item.value; // if its empty then dont submit it
 
   if (!name) return; // alternative would be to add required to html
 
@@ -143,7 +143,7 @@ function handleSubmit(e) {
   e.target.reset(); // note use of target instaed of current target
   // displayItems(); instead of this we are now going to fire off a custom event that will tell anyone who cares that the items have been updated.
 
-  list.dispatchEvent(new CustomEvent('ItemsUpdated'));
+  list.dispatchEvent(new CustomEvent('itemsUpdated'));
 }
 
 function displayItems() {
@@ -155,8 +155,35 @@ function displayItems() {
   list.innerHTML = html;
 }
 
+function mirrorToLocalStorage() {
+  console.info('saving items to localstorage');
+  localStorage.setItem('items', JSON.stringify(items));
+}
+
+function restoreFromLocalStorage() {
+  console.info('Restoring from localStorage'); // pull the items from local storage
+
+  const lsItems = JSON.parse(localStorage.getItem('items'));
+
+  if (lsItems.length) {
+    //itmes = lsItems;
+    // lsItems.forEach(item => items.push(item));
+    // items.push(lsiTEMS[0]);
+    items.push(...lsItems); // as push takes unlimited arguments
+
+    list.dispatchEvent(new CustomEvent('itemsUpdated'));
+  }
+} // ready for event delegation 
+
+
+function deleteItem(id) {
+  console.log('DELETING ITEM');
+}
+
 shoppingForm.addEventListener('submit', handleSubmit);
-list.addEventListener('ItemsUpdated', displayItems);
+list.addEventListener('itemsUpdated', displayItems);
+list.addEventListener('itemsUpdated', mirrorToLocalStorage);
+restoreFromLocalStorage();
 },{}],"../../../.npm-global/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -185,7 +212,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60768" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58015" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
